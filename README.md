@@ -1,4 +1,7 @@
 # flashlex-pi
+
+[![Join the chat at https://gitter.im/flashlex-pi-python/community](https://badges.gitter.im/flashlex-pi-python/community.svg)](https://gitter.im/flashlex-pi-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 the python raspberry pi IOT project for makers yes
 
 # supporting stuff
