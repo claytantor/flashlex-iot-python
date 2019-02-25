@@ -1,5 +1,8 @@
 # flashlex-pi-python
-the python raspberry pi IOT project for makers yes
+
+[![Join the chat at https://gitter.im/flashlex-pi-python/community](https://badges.gitter.im/flashlex-pi-python/community.svg)](https://gitter.im/flashlex-pi-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+the python raspberry pi IOT project for makers 
 
 # supporting stuff
 * The Python AWS IOT SDK - https://docs.aws.amazon.com/greengrass/latest/developerguide/IoT-SDK.html
