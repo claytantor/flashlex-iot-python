@@ -2,6 +2,8 @@
 
 [![Join the chat at https://gitter.im/flashlex-pi-python/community](https://badges.gitter.im/flashlex-pi-python/community.svg)](https://gitter.im/flashlex-pi-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![Build Status](https://travis-ci.org/claytantor/flashlex-pi-python.svg?branch=master)](https://travis-ci.org/claytantor/flashlex-pi-python)
+
 the python raspberry pi IOT project for makers 
 
 # supporting stuff
