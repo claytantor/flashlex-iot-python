@@ -20,7 +20,7 @@ script:
 
 before_deploy:
       - cd ..
-      - zip -r ${REPO}-${TRAVIS_COMMIT}.zip ${REPO} -x *.git* -x *venv* -x *.pytest_cache*
+      - zip -r ${REPO}-${TRAVIS_COMMIT}.zip ${REPO} -x *.git* -x *venv* -x *.pytest_cache* -x *test*
       - mkdir build
       - mv ${REPO}-${TRAVIS_COMMIT}.zip build/.
 deploy:
