@@ -1,14 +1,26 @@
 language: python
+
 python:
 - '3.6'
+
 branches:
   only:
   - master
   - dev
+
+env:
+ global:
+ - REPO=flashlex-pi-python
+
 install:
 - pip install -r requirements.txt
+
 script:
 - pytest
+
+before_deploy:
+      - cd ..
+      - zip -r ${REPO}-${TRAVIS_BRANCH}-${TRAVIS_COMMIT}.zip ${REPO} -x *.git* -x *venv* -x *.pytest_cache*
 deploy:
   provider: s3
   access_key_id: "AKIAIHGW4EU2NNPVI4VA"
@@ -16,6 +28,8 @@ deploy:
     secure: tGVFW0zmMXnGz1vYNEN8eVM/iLJw0dakBQ0fl6eBMsZUOetm19URT13qHrW2XI1GPldVWnZIJ8u4tAQG43Yb89eHEF5Sl+CvbKqjpEEfeSWmNFIbOKNqUuhBk26UhpnsvfzEtv/knth59FbPEimeJdQF3NSwAOgMZj5NM7MUT0toRdZPJ85OST8iCHpqjT4bdADRKY4heakvRQ2YT+bleQ2u9/PHoxiXsBJHnN6L0RGwzsWx0UUzgxA0OyRNp7WN9OoueaOqkJphaZbBbjZpxWQdhDEUe4/dbhdMED0rGCjvx87/2vPXFzWWC1qncCyzKdBmhkEBNlzdx5lW2wdieR6NA/32t4QqdxtyKbq2jg8txTAo/7WjahWRyPBV0w0+u3ouMwnQR+Scz1wL/33WXxJJRNcvq3fpVpMLHOQZOaG90vbNKpFYbQcKVH3MALMlnuRr2ZDlbHoLhsF2ac5RAPXo5RlPLOCyA0j6ntXWhfI5fbSVHrgEzs4Gyqd9MHfFuxtvhx5MazdMR/8NTNLb9vrOBySt9H6+1iOxJ3PsX/g4/91WKceC4cyH9dQj3JYqUXtZriNk34tH2YaCrqEteFC5X5AQ+Uh10Jc+lZ8Xo5qVd4nThsNaSSFivIoPDLdvoer7RlimF1nX7q5NvxYX2Vq5dStKkqoHK2dfh2aWZ8Y=
   bucket: "github.com.flashlex-pi-python"
   skip_cleanup: true
+  file: ${REPO}-${TRAVIS_BRANCH}-${TRAVIS_COMMIT}.zip
+  upload-dir: $TRAVIS_BRANCH
   on:
     all_branches: true
     condition: $TRAVIS_BRANCH =~ ^dev|master$
