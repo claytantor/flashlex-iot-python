@@ -3,7 +3,6 @@ import time
 import json
 import logging
 import sys, traceback
-from tinydb import TinyDB, Query
 
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
@@ -19,7 +18,7 @@ def subscribe(
     local database
     """
 
-    topic="ingress/{0}".format(thingName)
+    topic="ingress/{0}".format(config["thing"]["name"])
 
     # init LOGGER
     if (logLevel == None):
@@ -43,7 +42,7 @@ def subscribe(
 
     loop = True
     while loop:
-        LOGGER.debug("subscribe-{0} listening to topic: {1}".format(thingName, topic))
+        LOGGER.debug("subscribe-{0} listening to topic: {1}".format(config["thing"]["name"], topic))
         time.sleep(10)
 
 
