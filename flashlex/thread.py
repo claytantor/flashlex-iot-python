@@ -12,14 +12,7 @@ LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
 LOGGER = logging.getLogger(__name__)
 
 def subscribe(
-    host, 
-    port, 
-    rootCAPath, 
-    privateKeyPath, 
-    certificatePath,
-    useWebsocket, 
-    thingName,
-    message,
+    config,
     logLevel,
     customCallback):
     """ save messages subscribed to to 
@@ -28,16 +21,20 @@ def subscribe(
 
     topic="ingress/{0}".format(thingName)
 
-        # init LOGGER
+    # init LOGGER
     if (logLevel == None):
         logLevel = logging.INFO
     logging.basicConfig(level=logLevel, format=LOG_FORMAT)
 
+    # Init AWSIoTMQTTClient
     myAWSIoTMQTTClient = setupClient(
-        thingName, host, port, 
-        rootCAPath, privateKeyPath, 
-        certificatePath, topic, 
-        useWebsocket)
+        config["thing"]["name"], 
+        config["thing"]["endpoint"], 
+        config["thing"]["port"], 
+        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["rootCA"]), #rootca
+        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["privateKey"]), #private key
+        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["cert"]), #cert 
+        config["thing"]["useWebsocket"])
 
     # Connect and subscribe to AWS IoT
     myAWSIoTMQTTClient.connect()
@@ -65,19 +62,18 @@ def basicPubSub(
 
     # Init AWSIoTMQTTClient
     myAWSIoTMQTTClient = setupClient(
-        config.thing.name, 
-        config.thing.endpoint, 
-        config.thing.port, 
-        "{0}/{1}".format(config.thing.keys.path, config.thing.keys.rootCA), #rootca
-        "{0}/{1}".format(config.thing.keys.path, config.thing.keys.privateKeyPath), #private key
-        "{0}/{1}".format(config.thing.keys.path, config.thing.keys.cert), #cert 
-        config.thing.pubsub.topic, 
-        config.thing.useWebsocket)
+        config["thing"]["name"], 
+        config["thing"]["endpoint"], 
+        config["thing"]["port"], 
+        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["rootCA"]), #rootca
+        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["privateKey"]), #private key
+        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["cert"]), #cert 
+        config["thing"]["useWebsocket"])
 
     # Connect and subscribe to AWS IoT
     myAWSIoTMQTTClient.connect()
-    LOGGER.info("connected to {0}".format(config.thing.endpoint))
-    myAWSIoTMQTTClient.subscribe(config.thing.pubsub.topic, 1, customCallback)
+    LOGGER.info("connected to {0}".format(config["thing"]["endpoint"]))
+    myAWSIoTMQTTClient.subscribe(config["thing"]["pubsub"]["topic"], 1, customCallback)
     time.sleep(2)
 
     # Publish to the same topic in a loop forever
@@ -85,15 +81,13 @@ def basicPubSub(
     loop = True
     while loop:
         try:
-            if mode == 'both' or mode == 'publish':
-                messageModel = {}
-                messageModel['message'] = message
-                messageModel['sequence'] = loopCount
-                messageJson = json.dumps(messageModel)
-                myAWSIoTMQTTClient.publish(topic, messageJson, 1)
-                if mode == 'publish':
-                    print('Published topic %s: %s\n' % (topic, messageJson))
-                loopCount += 1
+            messageModel = {}
+            messageModel['message'] = message
+            messageModel['sequence'] = loopCount
+            messageJson = json.dumps(messageModel)
+            myAWSIoTMQTTClient.publish(config["thing"]["pubsub"]["topic"], messageJson, 1)
+            print('Published topic %s: %s\n' % (config["thing"]["pubsub"]["topic"], messageJson))
+            loopCount += 1
             time.sleep(1)
         except:
             LOGGER.error("an error occured.")
@@ -105,7 +99,7 @@ def basicPubSub(
 def setupClient(
     clientId, host, port, 
     rootCAPath, privateKeyPath, 
-    certificatePath, topic, 
+    certificatePath, 
     useWebsocket):
 
     # Init AWSIoTMQTTClient

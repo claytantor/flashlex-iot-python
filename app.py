@@ -35,25 +35,26 @@ parser.add_argument("-c", "--config", action="store", required=True, dest="confi
 
 args = parser.parse_args()
 config = loadConfig(args.config)
+print(config)
 
 # if args.mode not in AllowedActions:
 #     parser.error("Unknown --mode option %s. Must be one of %s" % (args.mode, str(AllowedActions)))
 #     exit(2)
 
-if config.thing.useWebsocket and config.thing.keys.certificate and config.thing.keys.privateKey:
-    parser.error("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
+if config["thing"]["useWebsocket"] and config["thing"]["keys"]["cert"] and config["thing"]["keys"]["privateKey"]:
+    print("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
     exit(2)
 
 # @TODO should make a config validation
-if not config.thing.useWebsocket and (not config.thing.keys.certificate or not config.thing.keys.privateKey):
-    parser.error("Missing credentials for authentication.")
+if not config["thing"]["useWebsocket"] and (not config["thing"]["keys"]["cert"] or not config["thing"]["keys"]["privateKey"]):
+    print("Missing credentials for authentication.")
     exit(2)
 
 # Port defaults
-if config.thing.useWebsocket and not config.thing.port:  # When no port override for WebSocket, default to 443
-    config.thing.port = 443
-if not args.useWebsocket and not config.thing.port:  # When no port override for non-WebSocket, default to 8883
-    config.thing.port = 8883
+if config["thing"]["useWebsocket"] and not config["thing"]["port"]:  # When no port override for WebSocket, default to 443
+    config["thing"]["port"] = 443
+if not config["thing"]["useWebsocket"] and not config["thing"]["port"]:  # When no port override for non-WebSocket, default to 8883
+    config["thing"]["port"] = 8883
 
 # # Configure logging
 # logger = logging.getLogger("AWSIoTPythonSDK.core")
