@@ -2,8 +2,10 @@ import logging
 import argparse
 import _thread
 import yaml
+import time, threading
+import sys, traceback
 
-from flashlex.thread import basicPubSub
+from flashlex.thread import BasicPubsubThread, ExpireMessagesThread
 from flashlex.callbacks import factory
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
@@ -17,41 +19,50 @@ def loadConfig(configFile):
         cfg = yaml.load(ymlfile)
     return cfg
 
-# Read in command-line parameters
-parser = argparse.ArgumentParser()
+def main(argv):
+    print("starting flashelex app.")
 
-parser.add_argument("-c", "--config", action="store", required=True, dest="config", help="the YAML configuration file")
+    # Read in command-line parameters
+    parser = argparse.ArgumentParser()
 
-args = parser.parse_args()
-config = loadConfig(args.config)
-# print(config)
+    parser.add_argument("-c", "--config", action="store", required=True, dest="config", help="the YAML configuration file")
 
-if config["thing"]["useWebsocket"] and config["thing"]["keys"]["cert"] and config["thing"]["keys"]["privateKey"]:
-    print("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
-    exit(2)
+    args = parser.parse_args()
+    config = loadConfig(args.config)
+    # print(config)
 
-# @TODO should make a config validation
-if not config["thing"]["useWebsocket"] and (not config["thing"]["keys"]["cert"] or not config["thing"]["keys"]["privateKey"]):
-    print("Missing credentials for authentication.")
-    exit(2)
+    if config["thing"]["useWebsocket"] and config["thing"]["keys"]["cert"] and config["thing"]["keys"]["privateKey"]:
+        print("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
+        exit(2)
 
-# Port defaults
-if config["thing"]["useWebsocket"] and not config["thing"]["port"]:  # When no port override for WebSocket, default to 443
-    config["thing"]["port"] = 443
-if not config["thing"]["useWebsocket"] and not config["thing"]["port"]:  # When no port override for non-WebSocket, default to 8883
-    config["thing"]["port"] = 8883
+    # @TODO should make a config validation
+    if not config["thing"]["useWebsocket"] and (not config["thing"]["keys"]["cert"] or not config["thing"]["keys"]["privateKey"]):
+        print("Missing credentials for authentication.")
+        exit(2)
 
-# Create two threads as follows
-try:
-   _thread.start_new_thread(basicPubSub(
-       "Thread-1",
-       "This is a basic message.",
-        config,
-        logging.INFO, 
-        factory.get_callback_for_config(config).handleMessage))
-except:
-   print ("Error: unable to start thread")
+    # Port defaults
+    if config["thing"]["useWebsocket"] and not config["thing"]["port"]:  # When no port override for WebSocket, default to 443
+        config["thing"]["port"] = 443
+    if not config["thing"]["useWebsocket"] and not config["thing"]["port"]:  # When no port override for non-WebSocket, default to 8883
+        config["thing"]["port"] = 8883
 
-while 1:
-   pass
+    # Create the message thread
+    try:
+        basicPubsup = BasicPubsubThread("Sending a basic message...", config, factory.get_callback_for_config(config).handleMessage)
+        basicPubsup.start()
+
+    except:
+        print ("Error: unable to start thread")
+        print("-"*60)
+        traceback.print_exc(file=sys.stdout)
+        print("-"*60)
+
+    while 1:
+        ## wait period then run
+        time.sleep(config["app"]["db"]["expireSeconds"])
+        expiresThread = ExpireMessagesThread(config)
+        expiresThread.start()   
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
 

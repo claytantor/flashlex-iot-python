@@ -29,8 +29,12 @@ class BasicPubsubCallbackHandler(object):
 class PersistentCallbackHandler(object):
 
     def __init__(self, config):
-        self._client = config["thing"]["name"]
-        self._db = TinyDB(config["app"]["dbPath"])
+        self._client = config["thing"]["name"] 
+        dbpath = "{0}/{1}".format(
+            config["app"]["db"]["dataPath"], 
+            config["app"]["db"]["subscriptionData"])
+        self._db = TinyDB(dbpath)
+
         self._type = "persistent"
 
     def handleMessage(self, client, userdata, message):
@@ -38,7 +42,7 @@ class PersistentCallbackHandler(object):
         ts= time.time()
         messageDoc = {}
         messageDoc["pk"] = str(uuid.uuid4())
-        messageDoc["timestamp"] = "{0}".format(ts)
+        messageDoc["timestamp"] = ts
         messageDoc["datetime"] = "{0}".format(datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S'))        
         messageDoc["message"] = {
                 "topic" : message.topic,
