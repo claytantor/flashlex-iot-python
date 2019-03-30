@@ -18,10 +18,10 @@ logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 class ExpireMessagesThread(threading.Thread):
     def __init__(self, config):
         super(ExpireMessagesThread, self).__init__()
-        self._expires = config["app"]["db"]["expireSeconds"]
+        self._expires = config["flashlex"]["app"]["db"]["expireSeconds"]
         dbpath = "{0}/{1}".format(
-            config["app"]["db"]["dataPath"], 
-            config["app"]["db"]["subscriptionData"])
+            config["flashlex"]["app"]["db"]["dataPath"], 
+            config["flashlex"]["app"]["db"]["subscriptionData"])
         self._db = TinyDB(dbpath)
 
     def run(self):
@@ -39,10 +39,10 @@ class TopicSubscribeThread(threading.Thread):
     def __init__(self, config, customCallback):
         super(TopicSubscribeThread, self).__init__()
         self._config = config
-        self.thingName = config["thing"]["name"]
+        self.thingName = config["flashlex"]["thing"]["name"]
         self._customCallback = customCallback
         self._iotClient = setupClientFromConfig(config)
-        self.topic = config["thing"]["ingress"]["topic"]
+        self.topic = config["flashlex"]["thing"]["ingress"]["topic"]
 
     def run(self):
         """ save messages subscribed to to 
@@ -66,10 +66,10 @@ class BasicPubsubThread(threading.Thread):
         super(BasicPubsubThread, self).__init__()
         self.message = message
         self._config = config
-        self.thingName = config["thing"]["name"]
+        self.thingName = config["flashlex"]["thing"]["name"]
         self._customCallback = customCallback
         self._iotClient = setupClientFromConfig(config)
-        self.topic = config["thing"]["pubsub"]["topic"]
+        self.topic = config["flashlex"]["thing"]["pubsub"]["topic"]
 
     def run(self):
         """ save messages subscribed to to 
@@ -105,13 +105,13 @@ class BasicPubsubThread(threading.Thread):
 
 def setupClientFromConfig(config):
     return setupClient(
-        config["thing"]["name"], 
-        config["thing"]["endpoint"], 
-        config["thing"]["port"], 
-        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["rootCA"]), #rootca
-        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["privateKey"]), #private key
-        "{0}/{1}".format(config["thing"]["keys"]["path"], config["thing"]["keys"]["cert"]), #cert 
-        config["thing"]["useWebsocket"])
+        config["flashlex"]["thing"]["name"], 
+        config["flashlex"]["thing"]["endpoint"], 
+        config["flashlex"]["thing"]["port"], 
+        "{0}/{1}".format(config["flashlex"]["thing"]["keys"]["path"], config["flashlex"]["thing"]["keys"]["rootCA"]), #rootca
+        "{0}/{1}".format(config["flashlex"]["thing"]["keys"]["path"], config["flashlex"]["thing"]["keys"]["privateKey"]), #private key
+        "{0}/{1}".format(config["flashlex"]["thing"]["keys"]["path"], config["flashlex"]["thing"]["keys"]["cert"]), #cert 
+        config["flashlex"]["thing"]["useWebsocket"])
 
 def setupClient(
     clientId, host, port, 

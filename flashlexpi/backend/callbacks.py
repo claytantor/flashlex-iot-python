@@ -6,12 +6,12 @@ from tinydb import TinyDB, Query
 
 class CallbackFactory:
     def get_callback_for_config(self, config):
-        if config["app"]["callback"] == 'basicPubsub':
+        if config["flashlex"]["app"]["callback"] == 'basicPubsub':
             return BasicPubsubCallbackHandler(config)
-        elif config["app"]["callback"] == 'persistent':
+        elif config["flashlex"]["app"]["callback"] == 'persistent':
             return PersistentCallbackHandler(config)            
         else:
-            raise ValueError(config["app"]["callback"])
+            raise ValueError(config["flashlex"]["app"]["callback"])
 
 class BasicPubsubCallbackHandler(object):
 
@@ -32,8 +32,8 @@ class PersistentCallbackHandler(object):
     def __init__(self, config):
         self._client = config["thing"]["name"] 
         self._dbpath = "{0}/{1}".format(
-            config["app"]["db"]["dataPath"], 
-            config["app"]["db"]["subscriptionData"])
+            config["flashlex"]["app"]["db"]["dataPath"], 
+            config["flashlex"]["app"]["db"]["subscriptionData"])
         # self._db = TinyDB(dbpath)
 
         self._type = "persistent"

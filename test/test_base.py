@@ -12,8 +12,8 @@ class TestFlashlexSDK(unittest.TestCase):
         self.sdk = FlashlexSDK(fn)
 
         config = self.sdk.getConfig()
-        config["app"]["db"]["dataPath"] = pathlib.Path(__file__).parent 
-        config["app"]["db"]["subscriptionData"] = 'data/subscription1.json'
+        config["flashlex"]["app"]["db"]["dataPath"] = pathlib.Path(__file__).parent 
+        config["flashlex"]["app"]["db"]["subscriptionData"] = 'data/subscription1.json'
         self.sdk.setConfig(config)
 
         #create a copy of the db with messages so one can be removed and tested
@@ -22,7 +22,7 @@ class TestFlashlexSDK(unittest.TestCase):
         copyfile(src, dest)
 
     def test_load_config(self):
-        self.assertEqual('testThing1', self.sdk.getConfig()["thing"]["name"])
+        self.assertEqual('testThing1', self.sdk.getConfig()["flashlex"]["thing"]["name"])
 
     def test_get_messages(self):
         messages = self.sdk.getSubscribedMessages()
@@ -30,8 +30,8 @@ class TestFlashlexSDK(unittest.TestCase):
 
     def test_remove_message(self):
         config = self.sdk.getConfig()
-        config["app"]["db"]["dataPath"] = pathlib.Path(__file__).parent 
-        config["app"]["db"]["subscriptionData"] = 'data/subscription1_copy.json'
+        config["flashlex"]["app"]["db"]["dataPath"] = pathlib.Path(__file__).parent 
+        config["flashlex"]["app"]["db"]["subscriptionData"] = 'data/subscription1_copy.json'
         self.sdk.setConfig(config)
         messages = self.sdk.getSubscribedMessages()
         self.sdk.removeMessageFromStore(messages[0])

@@ -21,8 +21,8 @@ class FlashlexSDK(object):
 
     def getSubscribedMessages(self, count=-1, sortMessages=True, reverse=False):
         subscriptionDataPath = "{0}/{1}".format(
-            self._config["app"]["db"]["dataPath"], 
-            self._config["app"]["db"]["subscriptionData"])
+            self._config["flashlex"]["app"]["db"]["dataPath"], 
+            self._config["flashlex"]["app"]["db"]["subscriptionData"])
 
         subscriptionDb = TinyDB(subscriptionDataPath)
 
@@ -40,8 +40,8 @@ class FlashlexSDK(object):
     def removeMessageFromStore(self, message):
         #print("removing document with doc_id:{0}".format(message.doc_id))
         subscriptionDataPath = "{0}/{1}".format(
-            self._config["app"]["db"]["dataPath"], 
-            self._config["app"]["db"]["subscriptionData"])
+            self._config["flashlex"]["app"]["db"]["dataPath"], 
+            self._config["flashlex"]["app"]["db"]["subscriptionData"])
         subscriptionDb = TinyDB(subscriptionDataPath)
         subscriptionDb.remove(doc_ids=[message.doc_id])
         subscriptionDb.close()
