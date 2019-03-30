@@ -5,8 +5,8 @@ import yaml
 import time, threading
 import sys, traceback
 
-from flashlex.thread import BasicPubsubThread, ExpireMessagesThread
-from flashlex.callbacks import factory
+from flashlexpi.backend.thread import BasicPubsubThread, ExpireMessagesThread
+from flashlexpi.backend.callbacks import factory
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
               '-35s %(lineno) -5d: %(message)s')

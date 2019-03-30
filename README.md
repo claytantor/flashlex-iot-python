@@ -23,9 +23,11 @@ OpenSSL 1.1.0j  20 Nov 2018
 ```
 
 # installing AWS IOT on the PI
-git clone https://github.com/aws/aws-iot-device-sdk-python.git
-cd aws-iot-device-sdk-python/
+```
+git clone https://github.com/claytantor/flashlex-pi-python.git
+cd flashlex-pi-python
 sudo python setup.py install
+```
 
 # keys
 In order to connect a device, you need to download the following a certificate for this thing.
