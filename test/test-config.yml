@@ -1,0 +1,26 @@
+app:
+  callback: persistent
+  db:
+    dataPath: ./data
+    subscriptionData: subscription.json
+    expireSeconds: 10 #messages older than an hour      
+dist:
+  commitSha: 04ef6427b67c5d2a332cdccad72252b992ee0911
+thing:
+  name: testThing1
+  endpoint: a1khvirpxw0646-ats.iot.us-east-1.amazonaws.com
+  keys:
+    path: /home/clay/data/github/claytantor/flashlex-pi-python/keys
+    rootCA: root-ca-cert.pem
+    cert: foobar30-certificate.pem
+    privateKey: foobar30-keypair-private.pem
+    publicKey: foobar30-keypair-public.pem
+  useWebsocket: false
+  port: 8883
+  pubsub:
+    topic: pubsub/foobar30
+  ingress:
+    topic: ingress/foobar30
+  egress:
+    topic: egress/foobar30  
+  

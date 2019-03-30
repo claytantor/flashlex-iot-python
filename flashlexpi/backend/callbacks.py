@@ -1,6 +1,7 @@
 import uuid
 import time
 import datetime
+import json
 from tinydb import TinyDB, Query
 
 class CallbackFactory:
@@ -20,7 +21,7 @@ class BasicPubsubCallbackHandler(object):
 
     def handleMessage(self, client, userdata, message):
         print("Received a new message on client:{0} type:{1}: ".format(self._client, self._type))
-        print(message.payload)
+        print(message.payload.decode("utf-8"))
         print("from topic: ")
         print(message.topic)
         print("--------------\n\n")
@@ -30,10 +31,10 @@ class PersistentCallbackHandler(object):
 
     def __init__(self, config):
         self._client = config["thing"]["name"] 
-        dbpath = "{0}/{1}".format(
+        self._dbpath = "{0}/{1}".format(
             config["app"]["db"]["dataPath"], 
             config["app"]["db"]["subscriptionData"])
-        self._db = TinyDB(dbpath)
+        # self._db = TinyDB(dbpath)
 
         self._type = "persistent"
 
@@ -41,21 +42,23 @@ class PersistentCallbackHandler(object):
 
         ts= time.time()
         messageDoc = {}
-        messageDoc["pk"] = str(uuid.uuid4())
+        messageDoc["pk"] = str(uuid.uuid4()).replace("-","")[:12]
         messageDoc["timestamp"] = ts
         messageDoc["datetime"] = "{0}".format(datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S'))        
         messageDoc["message"] = {
                 "topic" : message.topic,
-                "payload": str(message.payload),
+                "payload": json.loads(message.payload.decode("utf-8")),
                 "pos": message.qos,
                 "retain": message.retain,
                 "mid": message.mid
         }
-
-        self._db.insert(messageDoc)
+        
+        db = TinyDB(self._dbpath)
+        db.insert(messageDoc)
+        db.close()
 
         print("Received a new message on client:{0} type:{1}: ".format(self._client, self._type))
-        print(message.payload)
+        print(message.payload.decode("utf-8"))
         print("from topic: ")
         print(message.topic)
         print("--------------\n\n")
