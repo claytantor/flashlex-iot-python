@@ -5,8 +5,8 @@ import yaml
 import time, threading
 import sys, traceback
 
-from flashlexpi.backend.thread import BasicPubsubThread, ExpireMessagesThread
-from flashlexpi.backend.callbacks import factory
+from flashlexpi.backend.thread import BasicPubsubThread, ExpireMessagesThread, threadTypeFactory
+from flashlexpi.backend.callbacks import callbackFactory
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
               '-35s %(lineno) -5d: %(message)s')
@@ -16,7 +16,7 @@ LOGGER = logging.getLogger(__name__)
 def loadConfig(configFile):
     cfg = None
     with open(configFile, 'r') as ymlfile:
-        cfg = yaml.load(ymlfile)
+        cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
     return cfg
 
 def main(argv):
@@ -48,8 +48,11 @@ def main(argv):
 
     # Create the message thread
     try:
-        basicPubsup = BasicPubsubThread("Sending a basic message...", config, factory.get_callback_for_config(config).handleMessage)
-        basicPubsup.start()
+        # basicPubsup = BasicPubsubThread("Sending a basic message...", config, factory.get_callback_for_config(config).handleMessage)
+        # basicPubsup.start()
+        handler = callbackFactory.get_callback_for_config(config).handleMessage
+        thread = threadTypeFactory.get_thread_for_config(config, handler)
+        thread.start()
 
     except:
         print ("Error: unable to start thread")

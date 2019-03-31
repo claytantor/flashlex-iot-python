@@ -15,6 +15,16 @@ LOGGER = logging.getLogger(__name__)
 # init LOGGER
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
+
+class ThreadTypeFactory:
+    def get_thread_for_config(self, config, customCallback):
+        if config["flashlex"]["app"]["thread"] == 'basicPubsub':
+            return BasicPubsubThread(config, customCallback)
+        elif config["flashlex"]["app"]["thread"] == 'subscribe':
+            return TopicSubscribeThread(config, customCallback)            
+        else:
+            raise ValueError(config["flashlex"]["app"]["callback"])
+
 class ExpireMessagesThread(threading.Thread):
     def __init__(self, config):
         super(ExpireMessagesThread, self).__init__()
@@ -25,12 +35,11 @@ class ExpireMessagesThread(threading.Thread):
         self._db = TinyDB(dbpath)
 
     def run(self):
-        print("running message cleanup")   
+        LOGGER.info("running message cleanup")   
         if(self._expires>0):
             threshold = datetime.datetime.fromtimestamp(time.mktime(time.gmtime()))-datetime.timedelta(
                 seconds=int(self._expires))
-            ts = threshold.strftime("%s")    
-            print(ts)    
+            ts = threshold.strftime("%s")      
             Messages = Query()
             self._db.remove(Messages.timestamp < float(ts))
 
@@ -43,6 +52,10 @@ class TopicSubscribeThread(threading.Thread):
         self._customCallback = customCallback
         self._iotClient = setupClientFromConfig(config)
         self.topic = config["flashlex"]["thing"]["ingress"]["topic"]
+        self._type = "subscribe"
+
+    def getType(self):
+        return self._type    
 
     def run(self):
         """ save messages subscribed to to 
@@ -53,23 +66,42 @@ class TopicSubscribeThread(threading.Thread):
         # Connect and subscribe to AWS IoT
         self._iotClient.connect()
         self._iotClient.subscribe(self.topic, 1, self._customCallback)
-        time.sleep(2)    
+        time.sleep(4)
+
+        # try:
+        #     messageModel = {}
+        #     messageModel['message'] = "prime the pump"
+        #     messageJson = json.dumps(messageModel)
+        #     self._iotClient.publish(self.topic, messageJson, 1)
+        #     LOGGER.info('Published topic %s: %s\n' % (self.topic, messageJson))
+        #     loopCount += 1
+        #     time.sleep(5)
+        # except:
+        #     LOGGER.error("an error occured.")
+        #     print("-"*60)
+        #     traceback.print_exc(file=sys.stdout)
+        #     print("-"*60)
+        #     loop = False    
 
         loop = True
         while loop:
-            # LOGGER.debug("subscribe-{0} listening to topic: {1}".format(
-            #     self.thingName, topic))
+            # LOGGER.info("subscribe-{0} listening to topic: {1}".format(
+            #      self.thingName, self.topic))
             time.sleep(10)
 
 class BasicPubsubThread(threading.Thread):
-    def __init__(self, message, config, customCallback):
-        super(BasicPubsubThread, self).__init__()
-        self.message = message
+    def __init__(self, config, customCallback):
+        super(BasicPubsubThread, self).__init__()    
         self._config = config
+        self.message = config["flashlex"]["app"]["message"]
         self.thingName = config["flashlex"]["thing"]["name"]
         self._customCallback = customCallback
         self._iotClient = setupClientFromConfig(config)
         self.topic = config["flashlex"]["thing"]["pubsub"]["topic"]
+        self._type = "basicPubsub"
+
+    def getType(self):
+        return self._type
 
     def run(self):
         """ save messages subscribed to to 
@@ -95,7 +127,7 @@ class BasicPubsubThread(threading.Thread):
                 self._iotClient.publish(self.topic, messageJson, 1)
                 LOGGER.info('Published topic %s: %s\n' % (self.topic, messageJson))
                 loopCount += 1
-                time.sleep(1)
+                time.sleep(5)
             except:
                 LOGGER.error("an error occured.")
                 print("-"*60)
@@ -138,3 +170,5 @@ def setupClient(
     myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
 
     return myAWSIoTMQTTClient
+
+threadTypeFactory = ThreadTypeFactory()    

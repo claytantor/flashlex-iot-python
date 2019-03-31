@@ -63,6 +63,6 @@ class PersistentCallbackHandler(object):
         print(message.topic)
         print("--------------\n\n")
 
-factory = CallbackFactory()
+callbackFactory = CallbackFactory()
 
 
