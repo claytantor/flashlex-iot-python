@@ -16,7 +16,7 @@ class CallbackFactory:
 class BasicPubsubCallbackHandler(object):
 
     def __init__(self, config):
-        self._client = config["thing"]["name"]
+        self._client = config["flashlex"]["thing"]["name"]
         self._type = "basicPubsub"
 
     def handleMessage(self, client, userdata, message):
@@ -30,7 +30,7 @@ class BasicPubsubCallbackHandler(object):
 class PersistentCallbackHandler(object):
 
     def __init__(self, config):
-        self._client = config["thing"]["name"] 
+        self._client = config["flashlex"]["thing"]["name"] 
         self._dbpath = "{0}/{1}".format(
             config["flashlex"]["app"]["db"]["dataPath"], 
             config["flashlex"]["app"]["db"]["subscriptionData"])
