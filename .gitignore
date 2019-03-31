@@ -109,5 +109,5 @@ keys/*
 .vscode/
 .vscode/*
 
-data/
-data/*
+# dont commit data files
+data/*.json
