@@ -52,4 +52,9 @@ pip install virtualenv
 /home/pi/.local/bin/virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+
 ```
+
+
+sudo /home/pi/projects/ledticker-pi/venv/bin/python -u /home/pi/projects/ledticker-pi/flashlex.py --led-no-hardware-pulse true -m adafruit-hat -r 32 --led-cols 32 --log DEBUG --config /home/pi/projects/ledticker-pi/config.yml
