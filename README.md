@@ -31,7 +31,8 @@ sudo python setup.py install
 
 # keys
 In order to connect a device, you need to download the following a certificate for this thing.
-````
+
+```
 <my-iot-id>.cert.pem
 A public key	<my-iot-id>.public.key
 A private key	<my-iot-id>.private.key
@@ -52,9 +53,58 @@ pip install virtualenv
 /home/pi/.local/bin/virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
-
-
 ```
 
+# creating the systemd service
+Instructions for setting up your service can be found at https://www.raspberrypi-spy.co.uk/2015/10/how-to-autorun-a-python-script-on-boot-using-systemd/
 
-sudo /home/pi/projects/ledticker-pi/venv/bin/python -u /home/pi/projects/ledticker-pi/flashlex.py --led-no-hardware-pulse true -m adafruit-hat -r 32 --led-cols 32 --log DEBUG --config /home/pi/projects/ledticker-pi/config.yml
+```
+sudo cp flashlex.service /lib/systemd/system/flashlex.service
+sudo chmod 644 /lib/systemd/system/flashlex.service
+sudo systemctl daemon-reload
+sudo systemctl enable flashlex.service
+```
+
+## add logging to syslog
+
+Then, assuming your distribution is using rsyslog to manage syslogs, create a file in `/etc/rsyslog.d/<new_file>.conf` with the following content:
+
+```
+if $programname == '<your program identifier>' then /path/to/log/file.log
+& stop
+```
+
+restart rsyslog (sudo systemctl restart rsyslog) and enjoy! Your program stdout/stderr will still be available through journalctl (sudo journalctl -u <your program identifier>) but they will also be available in your file of choice.
+
+```
+sudo cp flashlex.conf /etc/rsyslog.d/flashlex.conf
+sudo systemctl daemon-reload
+sudo systemctl restart flashlex.service
+sudo systemctl restart rsyslog
+```
+
+## check the status of the service
+```
+sudo systemctl status flashlex.service
+```
+
+## rotating logs for your service
+you will want to rotate logs so your disk doesnt fill up with logs. your conf file for logrotation looks like this in `/etc/logrotate.conf`:
+
+```
+/var/log/flashlex.log {
+    daily
+    missingok
+    rotate 7
+    maxage 7
+    dateext
+    dateyesterday
+}
+```
+
+make a crontab that executes logrotate daily
+
+```
+/usr/sbin/logrotate /etc/logrotate.conf
+```
+

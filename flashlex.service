@@ -1,0 +1,14 @@
+[Unit]
+Description=flashlex
+After=multi-user.target
+
+[Service]
+ExecStart=/home/pi/projects/flashlex-pi-python/venv/bin/python -u /home/pi/projects/flashlex-pi-python/app.py --config /home/pi/projects/flashlex-pi-python/config.yml
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=flashlex
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
