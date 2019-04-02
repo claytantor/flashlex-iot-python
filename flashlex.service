@@ -3,7 +3,7 @@ Description=flashlex
 After=multi-user.target
 
 [Service]
-ExecStart=/home/pi/projects/flashlex-pi-python/venv/bin/python -u /home/pi/projects/flashlex-pi-python/app.py --config /home/pi/projects/flashlex-pi-python/config.yml
+ExecStart=/home/pi/projects/flashlex-pi-python/venv/bin/python -u /home/pi/projects/flashlex-pi-python/app.py --config /home/pi/projects/flashlex-pi-python/keys/config.yml
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=flashlex
