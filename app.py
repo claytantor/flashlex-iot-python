@@ -31,20 +31,20 @@ def main(argv):
     config = loadConfig(args.config)
     # print(config)
 
-    if config["flashlex"]["thing"]["useWebsocket"] and config["flashlex"]["thing"]["keys"]["cert"] and config["flashlex"]["thing"]["keys"]["privateKey"]:
+    if config["flashlex"]["thing"]["mqtt"]["useWebsocket"] and config["flashlex"]["thing"]["keys"]["cert"] and config["flashlex"]["thing"]["keys"]["privateKey"]:
         print("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
         exit(2)
 
     # @TODO should make a config validation
-    if not config["flashlex"]["thing"]["useWebsocket"] and (not config["flashlex"]["thing"]["keys"]["cert"] or not config["flashlex"]["thing"]["keys"]["privateKey"]):
+    if not config["flashlex"]["thing"]["mqtt"]["useWebsocket"] and (not config["flashlex"]["thing"]["keys"]["cert"] or not config["flashlex"]["thing"]["keys"]["privateKey"]):
         print("Missing credentials for authentication.")
         exit(2)
 
     # Port defaults
-    if config["flashlex"]["thing"]["useWebsocket"] and not config["flashlex"]["thing"]["port"]:  # When no port override for WebSocket, default to 443
-        config["flashlex"]["thing"]["port"] = 443
-    if not config["flashlex"]["thing"]["useWebsocket"] and not config["flashlex"]["thing"]["port"]:  # When no port override for non-WebSocket, default to 8883
-        config["flashlex"]["thing"]["port"] = 8883
+    if config["flashlex"]["thing"]["mqtt"]["useWebsocket"] and not config["flashlex"]["thing"]["mqtt"]["port"]:  # When no port override for WebSocket, default to 443
+        config["flashlex"]["thing"]["mqtt"]["port"] = 443
+    if not config["flashlex"]["thing"]["mqtt"]["useWebsocket"] and not config["flashlex"]["thing"]["mqtt"]["port"]:  # When no port override for non-WebSocket, default to 8883
+        config["flashlex"]["thing"]["mqtt"]["port"] = 8883
 
     # Create the message thread
     try:

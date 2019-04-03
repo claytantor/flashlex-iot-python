@@ -144,7 +144,7 @@ class BasicPubsubThread(threading.Thread):
 def setupClientFromConfig(config):
     return setupClient(
         config["flashlex"]["thing"]["name"], 
-        config["flashlex"]["thing"]["mqtt"]["endpoint"], 
+        config["flashlex"]["thing"]["endpoint"], 
         config["flashlex"]["thing"]["mqtt"]["port"], 
         "{0}/{1}".format(config["flashlex"]["thing"]["keys"]["path"], config["flashlex"]["thing"]["keys"]["rootCA"]), #rootca
         "{0}/{1}".format(config["flashlex"]["thing"]["keys"]["path"], config["flashlex"]["thing"]["keys"]["privateKey"]), #private key
