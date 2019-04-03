@@ -51,7 +51,7 @@ class TopicSubscribeThread(threading.Thread):
         self.thingName = config["flashlex"]["thing"]["name"]
         self._customCallback = customCallback
         self._iotClient = setupClientFromConfig(config)
-        self.topic = config["flashlex"]["thing"]["ingress"]["topic"]
+        self.topic = config["flashlex"]["thing"]["mqtt"]["ingress"]["topic"]
         self._type = "subscribe"
 
     def getType(self):
@@ -97,7 +97,7 @@ class BasicPubsubThread(threading.Thread):
         self.thingName = config["flashlex"]["thing"]["name"]
         self._customCallback = customCallback
         self._iotClient = setupClientFromConfig(config)
-        self.topic = config["flashlex"]["thing"]["pubsub"]["topic"]
+        self.topic = config["flashlex"]["thing"]["mqtt"]["pubsub"]["topic"]
         self._type = "basicPubsub"
 
     def getType(self):
@@ -135,21 +135,44 @@ class BasicPubsubThread(threading.Thread):
                 print("-"*60)
                 loop = False
 
+         
+
+            offlinePublishQueueing,
+            drainingFrequency,
+            connectDisconnectTimeout,
+            mqttOperationTimeout
 def setupClientFromConfig(config):
     return setupClient(
         config["flashlex"]["thing"]["name"], 
-        config["flashlex"]["thing"]["endpoint"], 
-        config["flashlex"]["thing"]["port"], 
+        config["flashlex"]["thing"]["mqtt"]["endpoint"], 
+        config["flashlex"]["thing"]["mqtt"]["port"], 
         "{0}/{1}".format(config["flashlex"]["thing"]["keys"]["path"], config["flashlex"]["thing"]["keys"]["rootCA"]), #rootca
         "{0}/{1}".format(config["flashlex"]["thing"]["keys"]["path"], config["flashlex"]["thing"]["keys"]["privateKey"]), #private key
         "{0}/{1}".format(config["flashlex"]["thing"]["keys"]["path"], config["flashlex"]["thing"]["keys"]["cert"]), #cert 
-        config["flashlex"]["thing"]["useWebsocket"])
+        config["flashlex"]["thing"]["mqtt"]["useWebsocket"],
+        config["flashlex"]["thing"]["mqtt"]["autoReconnectBackoffTime"]["baseReconnectQuietTimeSecond"],
+        config["flashlex"]["thing"]["mqtt"]["autoReconnectBackoffTime"]["maxReconnectQuietTimeSecond"],
+        config["flashlex"]["thing"]["mqtt"]["autoReconnectBackoffTime"]["stableConnectionTimeSecond"], 
+        config["flashlex"]["thing"]["mqtt"]["offlinePublishQueueing"],
+        config["flashlex"]["thing"]["mqtt"]["drainingFrequency"],
+        config["flashlex"]["thing"]["mqtt"]["connectDisconnectTimeout"],
+        config["flashlex"]["thing"]["mqtt"]["mqttOperationTimeout"])
 
 def setupClient(
-    clientId, host, port, 
-    rootCAPath, privateKeyPath, 
+    clientId, 
+    host, port, 
+    rootCAPath, 
+    privateKeyPath, 
     certificatePath, 
-    useWebsocket):
+    useWebsocket, 
+    baseReconnectQuietTimeSecond,
+    maxReconnectQuietTimeSecond,
+    stableConnectionTimeSecond,
+    offlinePublishQueueing,
+    drainingFrequency,
+    connectDisconnectTimeout,
+    mqttOperationTimeout
+    ):
 
     # Init AWSIoTMQTTClient
     myAWSIoTMQTTClient = None
@@ -163,12 +186,15 @@ def setupClient(
         myAWSIoTMQTTClient.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
 
     # AWSIoTMQTTClient connection configuration
-    myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
-    myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
-    myAWSIoTMQTTClient.configureDrainingFrequency(2)  # Draining: 2 Hz
-    myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)  # 10 sec
-    myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
-
+    myAWSIoTMQTTClient.configureAutoReconnectBackoffTime( 
+        baseReconnectQuietTimeSecond,
+        maxReconnectQuietTimeSecond,
+        stableConnectionTimeSecond)
+    myAWSIoTMQTTClient.configureOfflinePublishQueueing(offlinePublishQueueing)  # Infinite offline Publish queueing
+    myAWSIoTMQTTClient.configureDrainingFrequency(drainingFrequency)  # Draining: 2 Hz
+    myAWSIoTMQTTClient.configureConnectDisconnectTimeout(connectDisconnectTimeout)  # 10 sec
+    myAWSIoTMQTTClient.configureMQTTOperationTimeout(mqttOperationTimeout)  # 5 sec
+ 
     return myAWSIoTMQTTClient
 
 threadTypeFactory = ThreadTypeFactory()    
