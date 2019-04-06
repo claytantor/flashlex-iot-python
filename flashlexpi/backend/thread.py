@@ -135,12 +135,9 @@ class BasicPubsubThread(threading.Thread):
                 print("-"*60)
                 loop = False
 
-         
 
-            offlinePublishQueueing,
-            drainingFrequency,
-            connectDisconnectTimeout,
-            mqttOperationTimeout
+
+
 def setupClientFromConfig(config):
     return setupClient(
         config["flashlex"]["thing"]["name"], 
