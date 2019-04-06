@@ -36,3 +36,17 @@ To create a cross reference *to the latest version of this page from a page in C
 === Target a specific version of this page
 
 To create a cross reference *to version 1.0 of this page from a page in Component A*, the xref syntax would be `\xref:1.0@component-b::index.adoc[]`.
+
+[source,python]
+----
+payload = {
+    'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=1200),
+    'nbf': datetime.datetime.utcnow(),
+    'iss': 'urn:thing:{0}'.format(thingId),
+    'aud': 'urn:flashlex:{0}'.format(thingId)
+}
+
+jwt = createToken(thingId, payload, privateKey)
+print("{0}".format(jwt.decode("utf-8")))
+print(decodeToken(jwt, 'urn:flashlex:{0}'.format(thingId), publicKey))
+----
