@@ -1,8 +1,9 @@
 import yaml
 import requests
 import jwt
+import json
 import uuid
-import os,sys
+import os,sys, traceback
 import datetime
 
 from tinydb import TinyDB, Query
@@ -14,7 +15,7 @@ def openFile(fileName):
     return data
 
 def createToken(thingId, payload, privateKey):
-    return jwt.encode(payload, privateKey, algorithm='RS256', headers={'kid': thingId})
+    return jwt.encode(payload, privateKey, algorithm='RS256', headers={'kid': thingId}).decode('utf-8')
     
 class FlashlexSDK(object):
 
@@ -66,6 +67,7 @@ class FlashlexSDK(object):
         verified.
         """
         thingId=self._config["flashlex"]["thing"]["id"]
+        print("collecting message from thing:{0}".format(thingId))
         privateKey = openFile("{0}/{1}".format(
             self._config["flashlex"]["thing"]["keys"]["path"], 
             self._config["flashlex"]["thing"]["keys"]["privateKey"]))
@@ -78,15 +80,27 @@ class FlashlexSDK(object):
         }
 
         jwt = createToken(thingId, payload, privateKey)
+        
+        url = "{0}/{1}/things/{2}/collect".format(
+                self._config["flashlex"]["app"]['api']["endpoint"],
+                self._config["flashlex"]["app"]['api']["env"],
+                self._config["flashlex"]["thing"]["id"])
+        # payload = {'key1': 'value1', 'key2': 'value2'}        
+        headers={"Authorization":"Bearer {0}".format(jwt), 'Content-Type': 'application/json'}
+        print(url, message, headers)
 
         try:
-            r = requests.post("{0}/things/{1}/collect".format(
-                self._config["flashlex"]["app"]["endpoint"],
-                self._config["flashlex"]["thing"]["id"]), 
-                data = message, 
-                headers={"Authorization":jwt})
+            r = requests.post(url, 
+                data=json.dumps(message), 
+                headers=headers)
+            print(r.text)    
             return r.status_code
         except:
+            print("there was a problem.")
+            print("-"*60)
+            traceback.print_exc(file=sys.stdout)
+            print("-"*60)
+
             return 500
         
 
