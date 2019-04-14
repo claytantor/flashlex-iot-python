@@ -19,8 +19,11 @@ def createToken(thingId, payload, privateKey):
     
 class FlashlexSDK(object):
 
-    def __init__(self, configFile):
-        self._config = self.loadConfig(configFile)
+    def __init__(self, config):
+        if(type(config) == 'str'):
+            self._config = self.loadConfig(config)
+        else:
+            self._config = config
        
     def getConfig(self):
         return self._config

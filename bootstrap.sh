@@ -22,7 +22,7 @@ curl https://bootstrap.pypa.io/get-pip.py | ./venv/bin/python
 echo "thing name: ${THING_NAME} thing endpoint: ${THING_ENDPOINT}"
 
 # run the pubsub
-./venv/bin/python bootstrap.py -e ${THING_ENDPOINT} -r ../root-ca-cert.pem -c ../${THING_NAME}-certificate.pem -k ../${THING_NAME}-keypair-private.pem --mode both --topic sdk/test/Python
+./venv/bin/python -u bootstrap.py -c keys/config-bootstrap.yml -d $(pwd)/data -k $(pwd)/../. 
 
 else
 echo ERROR: OpenSSL is required fro IOT TLS.

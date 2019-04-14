@@ -108,3 +108,5 @@ make a crontab that executes logrotate daily
 /usr/sbin/logrotate /etc/logrotate.conf
 ```
 
+# bootstrap
+python -u bootstrap.py -c keys/config-bootstrap.yml -d $(pwd)/data -k $(pwd)/keys

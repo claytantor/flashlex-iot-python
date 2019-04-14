@@ -9,7 +9,9 @@ class CallbackFactory:
         if config["flashlex"]["app"]["callback"] == 'basicPubsub':
             return BasicPubsubCallbackHandler(config)
         elif config["flashlex"]["app"]["callback"] == 'persistent':
-            return PersistentCallbackHandler(config)            
+            return PersistentCallbackHandler(config)  
+        elif config["flashlex"]["app"]["callback"] == 'test':
+            return TestCallbackHandler(config)                    
         else:
             raise ValueError(config["flashlex"]["app"]["callback"])
 
@@ -26,7 +28,20 @@ class BasicPubsubCallbackHandler(object):
         print(message.topic)
         print("--------------\n\n")
 
-    
+class TestCallbackHandler(object):
+
+    def __init__(self, config):
+        self._client = config["flashlex"]["thing"]["name"]
+        self._type = "test"
+
+    def handleMessage(self, client, userdata, message):
+        print("Received a new message on client:{0} type:{1}: ".format(self._client, self._type))
+        print(message.payload.decode("utf-8"))
+        print("from topic: ")
+        print(message.topic)
+        print("--------------\n\n")
+
+
 class PersistentCallbackHandler(object):
 
     def __init__(self, config):
