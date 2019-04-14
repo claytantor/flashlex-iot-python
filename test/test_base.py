@@ -1,15 +1,29 @@
 import unittest
 import pathlib
-from shutil import copyfile
+import os, sys, traceback
+import yaml
 
+from os.path import dirname, abspath
+from shutil import copyfile
 from flashlexpi.backend.thread import BasicPubsubThread, ExpireMessagesThread
 from flashlexpi.sdk import FlashlexSDK
+
+def loadConfig(configFile):
+    cfg = None
+    with open(configFile, 'r') as ymlfile:
+        cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
+    return cfg
 
 class TestFlashlexSDK(unittest.TestCase):
 
     def setUp(self):
         fn = pathlib.Path(__file__).parent / 'test-config.yml'
-        self.sdk = FlashlexSDK(fn)
+
+         #get defaults for data and keys
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        config = loadConfig("{0}/test-config.yml".format(dir_path))
+
+        self.sdk = FlashlexSDK(config)
 
         config = self.sdk.getConfig()
         config["flashlex"]["app"]["db"]["dataPath"] = pathlib.Path(__file__).parent 
