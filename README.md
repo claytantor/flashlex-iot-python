@@ -110,3 +110,14 @@ make a crontab that executes logrotate daily
 
 # bootstrap
 python -u bootstrap.py -c keys/config-bootstrap.yml -d $(pwd)/data -k $(pwd)/keys
+
+#collect a message
+```
+$ source venv/bin/activate
+(venv) $ python -u collectmessage.py -c keys/config-bootstrap.yml -d $(pwd)/data -k $(pwd)/keys
+starting flashelex app.
+collecting message from thing:a44d80ec-bc2d-44d2-8568-eb23f7d44021
+https://u100den7gk.execute-api.us-east-1.amazonaws.com/dev/things/a44d80ec-bc2d-44d2-8568-eb23f7d44021/collect {'foo': 'bar'} {'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImE0NGQ4MGVjLWJjMmQtNDRkMi04NTY4LWViMjNmN2Q0NDAyMSJ9.eyJleHAiOjE1NTU3NzU5ODMsIm5iZiI6MTU1NTc3NTg2MywiaXNzIjoidXJuOnRoaW5nOmE0NGQ4MGVjLWJjMmQtNDRkMi04NTY4LWViMjNmN2Q0NDAyMSIsImF1ZCI6InVybjpmbGFzaGxleDphNDRkODBlYy1iYzJkLTQ0ZDItODU2OC1lYjIzZjdkNDQwMjEifQ.Thv2m04Bhgqe5T7KkxGgW0ESvW4gATUhRGedzaTOul820CgQCtXlT158X6T-ysoMqTP5N1du2TF3-tY_zU_QPM-K8uTlkqspIBri72aUurl7nOTKpmlxexHaiJlM3BlkZJBIX0T4bnTraCrrc4BscNQRs7jJcWkW277F-ok59fRRYAVa2nZdZVcrI9ZeGUR3a9BrlO4YslYaldLN61YU-Q-Fg4OK3xEcooPUhNNGfEpL0Gpme3dBI123ADwn10jK8snhIBD76kOeoHy2yCD7lYufclwuXeuvl0xA3QAFdZC-GVaywb9AaNPFg1clbGqmfBkl1hIpUDWK4IodqhZ_Zg', 'Content-Type': 'application/json'}
+{"message": "Internal server error"}
+FlashlexSDK Collector Status Code: 502
+```
