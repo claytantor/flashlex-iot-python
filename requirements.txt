@@ -3,3 +3,4 @@ tinydb==3.13.0
 PyYAML>=5.1
 PyJWT==1.7.1
 requests==2.18.4
+cryptography==2.6.1

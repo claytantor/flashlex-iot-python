@@ -70,14 +70,16 @@ class FlashlexSDK(object):
         verified.
         """
         thingId=self._config["flashlex"]["thing"]["id"]
-        print("collecting message from thing:{0}".format(thingId))
+        print("collecting message from thing: {0}".format(thingId))
+        print(self._config["flashlex"]["thing"]["keys"]["path"])
         privateKey = openFile("{0}/{1}".format(
             self._config["flashlex"]["thing"]["keys"]["path"], 
             self._config["flashlex"]["thing"]["keys"]["privateKey"]))
 
+        
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=120),
-            'nbf': datetime.datetime.utcnow(),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=360),
+            'nbf': datetime.datetime.utcnow() - datetime.timedelta(seconds=360),
             'iss': 'urn:thing:{0}'.format(thingId),
             'aud': 'urn:flashlex:{0}'.format(thingId)
         }
