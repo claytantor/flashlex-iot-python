@@ -1,14 +1,14 @@
-# flashlex-pi-python
+# flashlex-iot-python
 
-[![Join the chat at https://gitter.im/flashlex-pi-python/community](https://badges.gitter.im/flashlex-pi-python/community.svg)](https://gitter.im/flashlex-pi-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/flashlex-iot-python/community](https://badges.gitter.im/flashlex-iot-python/community.svg)](https://gitter.im/flashlex-iot-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/claytantor/flashlex-pi-python.svg?branch=master)](https://travis-ci.org/claytantor/flashlex-pi-python)
+[![Build Status](https://travis-ci.org/claytantor/flashlex-iot-python.svg?branch=master)](https://travis-ci.org/claytantor/flashlex-iot-python)
 
 the python raspberry pi IOT project for makers 
 
 # supporting stuff
 * The Python AWS IOT SDK - https://docs.aws.amazon.com/greengrass/latest/developerguide/IoT-SDK.html
-* FlashLex Python Community on Gitter - https://gitter.im/flashlex-pi-python/community
+* FlashLex Python Community on Gitter - https://gitter.im/flashlex-iot-python/community
 
 # using python 3
 you need the ssl system packages because IOT requires ssl
@@ -16,7 +16,9 @@ you need the ssl system packages because IOT requires ssl
 ```
 python3 -m venv venv --system-site-packages
 source venv/bin/activate
-python
+python3 -m pip install --user --upgrade pip
+python3 -m pip install -r requirements.txt
+python3
 import ssl
 print (ssl.OPENSSL_VERSION)
 OpenSSL 1.1.0j  20 Nov 2018
@@ -24,8 +26,8 @@ OpenSSL 1.1.0j  20 Nov 2018
 
 # installing AWS IOT on the PI
 ```
-git clone https://github.com/claytantor/flashlex-pi-python.git
-cd flashlex-pi-python
+git clone https://github.com/claytantor/flashlex-iot-python.git
+cd flashlex-iot-python
 sudo python setup.py install
 ```
 

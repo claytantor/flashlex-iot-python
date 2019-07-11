@@ -11,7 +11,7 @@ setuptools.setup(
     description="Flashlex IOT for python makes it easy to make any python computer an IOT device.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/claytantor/flashlexiot-python",
+    url="https://github.com/claytantor/flashlex-iot-python",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

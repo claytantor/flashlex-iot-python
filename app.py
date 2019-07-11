@@ -3,10 +3,10 @@ import argparse
 import _thread
 import yaml
 import time, threading
-import sys, traceback
+import sys, traceback 
 
-from flashlexpi.backend.thread import BasicPubsubThread, ExpireMessagesThread, threadTypeFactory
-from flashlexpi.backend.callbacks import callbackFactory
+from flashlexiot.backend.thread import BasicPubsubThread, ExpireMessagesThread, threadTypeFactory
+from flashlexiot.backend.callbacks import callbackFactory
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
               '-35s %(lineno) -5d: %(message)s')
