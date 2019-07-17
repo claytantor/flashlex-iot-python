@@ -1,9 +1,14 @@
-# flashlex-pi
-the python raspberry pi IOT project for makers yes
+# flashlex-pi-python
+
+[![Join the chat at https://gitter.im/flashlex-pi-python/community](https://badges.gitter.im/flashlex-pi-python/community.svg)](https://gitter.im/flashlex-pi-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[![Build Status](https://travis-ci.org/claytantor/flashlex-pi-python.svg?branch=master)](https://travis-ci.org/claytantor/flashlex-pi-python) [![Join the chat at https://gitter.im/flashlex-iot-python/community](https://badges.gitter.im/flashlex-iot-python/community.svg)](https://gitter.im/flashlex-iot-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+the python raspberry pi IOT project for makers 
 
 # supporting stuff
-https://docs.aws.amazon.com/greengrass/latest/developerguide/IoT-SDK.html
-
+* The Python AWS IOT SDK - https://docs.aws.amazon.com/greengrass/latest/developerguide/IoT-SDK.html
+* FlashLex Python Community on Gitter - https://gitter.im/flashlex-pi-python/community
 
 # using python 3
 you need the ssl system packages because IOT requires ssl
@@ -23,20 +28,26 @@ cd aws-iot-device-sdk-python/
 sudo python setup.py install
 
 # keys
-In order to connect a device, you need to download the following:
-A certificate for this thing	fc91e1ff06.cert.pem	Download
-A public key	fc91e1ff06.public.key	Download
-A private key	fc91e1ff06.private.key	Download
+In order to connect a device, you need to download the following a certificate for this thing.
+````
+<my-iot-id>.cert.pem
+A public key	<my-iot-id>.public.key
+A private key	<my-iot-id>.private.key
+```
 
-# endpoint
+# pub sub
 
-python basicPubSub.py -e a1khvirpxw0646-ats.iot.us-east-1.amazonaws.com -r ssl/AmazonRootCA1.pem -c ../keys/fc91e1ff06-certificate.pem.crt -k ../keys/fc91e1ff06-private.pem.key
+```
+python basicPubSub.py -e <my-iot-endpoint>.iot.us-east-1.amazonaws.com -r ssl/AmazonRootCA1.pem -c ../keys/<my-iot-id>-certificate.pem.crt -k ../keys/<my-iot-id>-private.pem.key
+```
 
 
 ## steps
+```
 git clone https://github.com/claytantor/flashlex-pi.git
 cd flashlex-pi/
 pip install virtualenv
 /home/pi/.local/bin/virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
