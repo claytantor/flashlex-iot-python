@@ -5,8 +5,8 @@ import yaml
 
 from os.path import dirname, abspath
 from shutil import copyfile
-from flashlexpi.backend.thread import BasicPubsubThread, ExpireMessagesThread
-from flashlexpi.sdk import FlashlexSDK
+from flashlexiot.backend.thread import BasicPubsubThread, ExpireMessagesThread
+from flashlexiot.sdk import FlashlexSDK
 
 def loadConfig(configFile):
     cfg = None
