@@ -86,7 +86,7 @@ class FlashlexSDK(object):
 
         jwt = createToken(thingId, payload, privateKey)
         
-        url = "{0}/{1}/things/{2}/collect".format(
+        url = "{0}/{1}/v1/things/{2}/collect".format(
                 self._config["flashlex"]["app"]['api']["endpoint"],
                 self._config["flashlex"]["app"]['api']["env"],
                 self._config["flashlex"]["thing"]["id"])

@@ -6,10 +6,10 @@ import time, threading
 import os, sys, traceback
 from os.path import dirname, abspath
 
-from flashlexpi.backend.thread import BasicPubsubThread, ExpireMessagesThread, threadTypeFactory
-from flashlexpi.backend.callbacks import callbackFactory
+from flashlexiot.backend.thread import BasicPubsubThread, ExpireMessagesThread, threadTypeFactory
+from flashlexiot.backend.callbacks import callbackFactory
 
-from flashlexpi.sdk import FlashlexSDK
+from flashlexiot.sdk import FlashlexSDK
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
               '-35s %(lineno) -5d: %(message)s')
