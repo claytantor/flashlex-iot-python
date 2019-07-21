@@ -3,7 +3,8 @@ import argparse
 import _thread
 import yaml
 import time, threading
-import sys, traceback 
+import sys, traceback, os
+from os.path import dirname, abspath 
 
 from flashlexiot.backend.thread import BasicPubsubThread, ExpireMessagesThread, threadTypeFactory
 from flashlexiot.backend.callbacks import callbackFactory
@@ -23,17 +24,27 @@ def main(argv):
     print("starting flashelex app.")
 
     # get the default paths for both keys and data
-
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    parent_dir = dirname(dirname(abspath(__file__)))
 
     # Read in command-line parameters
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-c", "--config", action="store", required=True, dest="config", help="the YAML configuration file")
-    # parser.add_argument("-d", "--data", action="store", required=False, dest="data", default="" help="the directory path for thing message data storage")
+    parser.add_argument("-c", "--config", action="store", 
+        required=True, dest="config", help="the YAML configuration file")
+    parser.add_argument("-d", "--data", action="store", 
+        required=False, dest="data", default="{0}/data".format(dir_path), 
+        help="the directory path for thing message data storage")
+    parser.add_argument("-k", "--keys", action="store", 
+        required=False, dest="keys", default="{0}".format(parent_dir), 
+        help="the directory path for keys")
 
     args = parser.parse_args()
     config = loadConfig(args.config)
-    # print(config)
+    
+    #use command args for config overrides
+    config["flashlex"]["app"]["db"]["dataPath"] = args.data
+    config["flashlex"]["thing"]["keys"]["path"] = args.keys
 
     if config["flashlex"]["thing"]["mqtt"]["useWebsocket"] and config["flashlex"]["thing"]["keys"]["cert"] and config["flashlex"]["thing"]["keys"]["privateKey"]:
         print("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
