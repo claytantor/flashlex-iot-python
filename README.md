@@ -1,10 +1,9 @@
-# flashlex-pi-python
-
-[![Join the chat at https://gitter.im/flashlex-pi-python/community](https://badges.gitter.im/flashlex-pi-python/community.svg)](https://gitter.im/flashlex-pi-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Build Status](https://travis-ci.org/claytantor/flashlex-pi-python.svg?branch=master)](https://travis-ci.org/claytantor/flashlex-pi-python) [![Join the chat at https://gitter.im/flashlex-iot-python/community](https://badges.gitter.im/flashlex-iot-python/community.svg)](https://gitter.im/flashlex-iot-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
+# flashlex-iot-python
 the python raspberry pi IOT project for makers 
+
+[![Build Status](https://travis-ci.org/claytantor/flashlex-pi-python.svg?branch=master)](https://travis-ci.org/claytantor/flashlex-pi-python) 
+[![Join the chat at https://gitter.im/flashlex-iot-python/community](https://badges.gitter.im/flashlex-iot-python/community.svg)](https://gitter.im/flashlex-iot-python/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 # supporting stuff
 * The Python AWS IOT SDK - https://docs.aws.amazon.com/greengrass/latest/developerguide/IoT-SDK.html
