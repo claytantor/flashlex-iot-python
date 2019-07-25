@@ -102,3 +102,15 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+keys/
+keys/*
+
+.vscode/
+.vscode/*
+
+# dont commit data files
+data/*.json
+flashlex.service
+config.yml
+
