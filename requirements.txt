@@ -2,6 +2,6 @@ AWSIoTPythonSDK==1.4.4
 tinydb==3.13.0
 PyYAML>=5.1
 PyJWT==1.7.1
-requests==2.18.4
+requests>=2.20.0
 cryptography==2.6.1
 pystache==0.5.4
