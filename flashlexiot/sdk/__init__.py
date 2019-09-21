@@ -5,8 +5,8 @@ import json
 import uuid
 import os,sys, traceback
 import datetime
+import pickledb
 
-from tinydb import TinyDB, Query
 
 def openFile(fileName):
     data = ""
@@ -42,11 +42,13 @@ class FlashlexSDK(object):
             self._config["flashlex"]["app"]["db"]["dataPath"], 
             self._config["flashlex"]["app"]["db"]["subscriptionData"])
 
-        subscriptionDb = TinyDB(subscriptionDataPath)
+        subscriptionDb = pickledb.load(subscriptionDataPath, False)
+        listKeys = subscriptionDb.getall()
+        messages_all = []
+        for key in listKeys:
+            messages_all.append(subscriptionDb.get(key))
 
-        messages_all = subscriptionDb.all()
-        subscriptionDb.close()
-
+        print(messages_all)
         if(sortMessages):
             sorted(messages_all, key=lambda message: message["timestamp"], reverse=reverse)
         if(count>0):
@@ -58,9 +60,28 @@ class FlashlexSDK(object):
         subscriptionDataPath = "{0}/{1}".format(
             self._config["flashlex"]["app"]["db"]["dataPath"], 
             self._config["flashlex"]["app"]["db"]["subscriptionData"])
-        subscriptionDb = TinyDB(subscriptionDataPath)
-        subscriptionDb.remove(doc_ids=[message.doc_id])
-        subscriptionDb.close()
+
+        if 'pk' in message:
+            subscriptionDb = pickledb.load(subscriptionDataPath, False)
+            subscriptionDb.rem(message['pk'])
+            subscriptionDb.dump()
+        else:
+            raise KeyError('pk key is required')
+
+    def setMessageToStore(self, message):
+        subscriptionDataPath = "{0}/{1}".format(
+            self._config["flashlex"]["app"]["db"]["dataPath"], 
+            self._config["flashlex"]["app"]["db"]["subscriptionData"])
+
+        #should add pk if missing
+        if 'pk' not in message:
+            message["pk"] = str(uuid.uuid4()).replace("-","")[:12]
+
+        subscriptionDb = pickledb.load(subscriptionDataPath, False)
+        subscriptionDb.set(message['pk'], message)
+        subscriptionDb.dump()
+
+
     
     def collectMessage(self, message):
         """

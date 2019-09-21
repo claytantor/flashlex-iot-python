@@ -2,7 +2,9 @@ import uuid
 import time
 import datetime
 import json
-from tinydb import TinyDB, Query
+# import pickledb
+
+from flashlexiot.sdk import FlashlexSDK
 
 class CallbackFactory:
     def get_callback_for_config(self, config):
@@ -49,9 +51,10 @@ class PersistentCallbackHandler(object):
         self._dbpath = "{0}/{1}".format(
             config["flashlex"]["app"]["db"]["dataPath"], 
             config["flashlex"]["app"]["db"]["subscriptionData"])
-        # self._db = TinyDB(dbpath)
 
         self._type = "persistent"
+
+        self._sdk = FlashlexSDK(config)
 
     def handleMessage(self, client, userdata, message):
 
@@ -68,9 +71,7 @@ class PersistentCallbackHandler(object):
                 "mid": message.mid
         }
         
-        db = TinyDB(self._dbpath)
-        db.insert(messageDoc)
-        db.close()
+        self._sdk.setMessageToStore(messageDoc)
 
         print("Received a new message on client:{0} type:{1}: ".format(self._client, self._type))
         print(message.payload.decode("utf-8"))
