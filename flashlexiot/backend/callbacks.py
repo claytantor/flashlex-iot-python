@@ -2,7 +2,6 @@ import uuid
 import time
 import datetime
 import json
-# import pickledb
 
 from flashlexiot.sdk import FlashlexSDK
 

@@ -3,6 +3,7 @@ import time, datetime
 import json
 import logging
 import sys, traceback
+from flashlexiot.sdk import FlashlexSDK
 
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
@@ -33,6 +34,7 @@ class ExpireMessagesThread(threading.Thread):
         self._dbpath = "{0}/{1}".format(
             config["flashlex"]["app"]["db"]["dataPath"], 
             config["flashlex"]["app"]["db"]["subscriptionData"])
+        self._sdk = FlashlexSDK(config)
 
 
     def run(self):
@@ -41,16 +43,11 @@ class ExpireMessagesThread(threading.Thread):
             threshold = datetime.datetime.fromtimestamp(time.mktime(time.gmtime()))-datetime.timedelta(seconds=int(self._expires))
             ts = threshold.strftime("%s")  
 
-            subscriptionDb = pickledb.load(subscriptionDataPath, False)
-            listKeys = subscriptionDb.getall()
-            messages_all = []
-            for key in listKeys:
-                message = subscriptionDb.get(key)
+            messages = self._sdk.getSubscribedMessages()
+            for message in messages:
                 if message.timestamp < float(ts):
-                    subscriptionDb.rem(message.doc_id)
+                    self._sdk.removeMessageFromStore(message)
     
-            subscriptionDb.dump()
-
 
 class TopicSubscribeThread(threading.Thread):
     def __init__(self, config, customCallback):
