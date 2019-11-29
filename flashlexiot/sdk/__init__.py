@@ -42,7 +42,7 @@ class FlashlexSDK(object):
             self._config["flashlex"]["app"]["db"]["dataPath"], 
             self._config["flashlex"]["app"]["db"]["subscriptionData"])
 
-        subscriptionDb = pickledb.load(subscriptionDataPath, False)
+        subscriptionDb = pickledb.load(subscriptionDataPath, False, sig=False)
         listKeys = subscriptionDb.getall()
         messages_all = []
         for key in listKeys:
@@ -62,7 +62,7 @@ class FlashlexSDK(object):
             self._config["flashlex"]["app"]["db"]["subscriptionData"])
 
         if 'pk' in message:
-            subscriptionDb = pickledb.load(subscriptionDataPath, False)
+            subscriptionDb = pickledb.load(subscriptionDataPath, False, sig=False)
             subscriptionDb.rem(message['pk'])
             subscriptionDb.dump()
         else:
@@ -77,7 +77,7 @@ class FlashlexSDK(object):
         if 'pk' not in message:
             message["pk"] = str(uuid.uuid4()).replace("-","")[:12]
 
-        subscriptionDb = pickledb.load(subscriptionDataPath, False)
+        subscriptionDb = pickledb.load(subscriptionDataPath, False, sig=False)
         subscriptionDb.set(message['pk'], message)
         subscriptionDb.dump()
 
