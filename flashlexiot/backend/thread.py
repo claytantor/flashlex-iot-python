@@ -3,8 +3,8 @@ import time, datetime
 import json
 import logging
 import sys, traceback
+from flashlexiot.sdk import FlashlexSDK
 
-from tinydb import TinyDB, Query
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
@@ -31,20 +31,23 @@ class ExpireMessagesThread(threading.Thread):
     def __init__(self, config):
         super(ExpireMessagesThread, self).__init__()
         self._expires = config["flashlex"]["app"]["db"]["expireSeconds"]
-        dbpath = "{0}/{1}".format(
+        self._dbpath = "{0}/{1}".format(
             config["flashlex"]["app"]["db"]["dataPath"], 
             config["flashlex"]["app"]["db"]["subscriptionData"])
-        self._db = TinyDB(dbpath)
+        self._sdk = FlashlexSDK(config)
+
 
     def run(self):
         LOGGER.info("running message cleanup")   
         if(self._expires>0):
-            threshold = datetime.datetime.fromtimestamp(time.mktime(time.gmtime()))-datetime.timedelta(
-                seconds=int(self._expires))
-            ts = threshold.strftime("%s")      
-            Messages = Query()
-            self._db.remove(Messages.timestamp < float(ts))
+            threshold = datetime.datetime.fromtimestamp(time.mktime(time.gmtime()))-datetime.timedelta(seconds=int(self._expires))
+            ts = threshold.strftime("%s")  
 
+            messages = self._sdk.getSubscribedMessages()
+            for message in messages:
+                if message.timestamp < float(ts):
+                    self._sdk.removeMessageFromStore(message)
+    
 
 class TopicSubscribeThread(threading.Thread):
     def __init__(self, config, customCallback):

@@ -2,6 +2,7 @@ import unittest
 import pathlib
 import os, sys, traceback
 import yaml
+import pickledb
 
 from os.path import dirname, abspath
 from shutil import copyfile
@@ -27,30 +28,73 @@ class TestFlashlexSDK(unittest.TestCase):
 
         config = self.sdk.getConfig()
         config["flashlex"]["app"]["db"]["dataPath"] = pathlib.Path(__file__).parent 
-        config["flashlex"]["app"]["db"]["subscriptionData"] = 'data/subscription1.json'
+        config["flashlex"]["app"]["db"]["subscriptionData"] = 'data/subscription2.db'
         self.sdk.setConfig(config)
 
-        #create a copy of the db with messages so one can be removed and tested
-        src = pathlib.Path(__file__).parent / 'data/subscription1.json'
-        dest = pathlib.Path(__file__).parent / 'data/subscription1_copy.json'
-        copyfile(src, dest)
+        message1 = {
+            "pk": "b300d03c-7bd4-4110-9489-5ef59abb1981",
+            "timestamp": 1553978975.5232847,
+            "datetime": "2019-03-30 13:49:35",
+            "message": {
+                "topic": "pubsub/foobar30",
+                "payload": {
+                    "message": "Sending a basic message...",
+                    "sequence": 151
+                },
+                "pos": 1,
+                "retain": 0,
+                "mid": 1
+            }
+        }
+        
+        message2 = {
+            "pk": "a300d03c-7bd4-4110-9489-5ef59abb1981",
+            "timestamp": 1553978976.5232847,
+            "datetime": "2019-03-30 13:49:35",
+            "message": {
+                "topic": "pubsub/foobar30",
+                "payload": {
+                    "message": "Sending a basic message...",
+                    "sequence": 151
+                },
+                "pos": 1,
+                "retain": 0,
+                "mid": 1
+            }
+        }
+
+        subscriptionDataPath = "{0}/{1}".format(
+            config["flashlex"]["app"]["db"]["dataPath"], 
+            config["flashlex"]["app"]["db"]["subscriptionData"])
+
+        subscriptionDb = pickledb.load(subscriptionDataPath, False)
+        subscriptionDb.set(message1['pk'], message1)
+        subscriptionDb.set(message2['pk'], message2)
+        subscriptionDb.dump()
 
     def test_load_config(self):
         self.assertEqual('testThing1', self.sdk.getConfig()["flashlex"]["thing"]["name"])
 
     def test_get_messages(self):
         messages = self.sdk.getSubscribedMessages()
-        self.assertEqual(7,len(messages))
+        self.assertEqual(2,len(messages))
 
     def test_remove_message(self):
         config = self.sdk.getConfig()
-        config["flashlex"]["app"]["db"]["dataPath"] = pathlib.Path(__file__).parent 
-        config["flashlex"]["app"]["db"]["subscriptionData"] = 'data/subscription1_copy.json'
-        self.sdk.setConfig(config)
         messages = self.sdk.getSubscribedMessages()
         self.sdk.removeMessageFromStore(messages[0])
         messages = self.sdk.getSubscribedMessages()
-        self.assertEqual(6,len(messages))
+        self.assertEqual(1,len(messages))
+
+    def tearDown(self):
+        print('tear down')
+
+        config = self.sdk.getConfig()
+        subscriptionDataPath = "{0}/{1}".format(
+            config["flashlex"]["app"]["db"]["dataPath"], 
+            config["flashlex"]["app"]["db"]["subscriptionData"])
+
+        os.remove(subscriptionDataPath)
 
 
 

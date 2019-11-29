@@ -3,7 +3,7 @@ flashlex:
     callback: persistent
     db:
       dataPath: ./data
-      subscriptionData: subscription.json
+      subscriptionData: subscription.db
       expireSeconds: 10 #messages older than an hour      
   dist:
     commitSha: 04ef6427b67c5d2a332cdccad72252b992ee0911
