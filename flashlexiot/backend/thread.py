@@ -45,7 +45,7 @@ class ExpireMessagesThread(threading.Thread):
 
             messages = self._sdk.getSubscribedMessages()
             for message in messages:
-                if message.timestamp < float(ts):
+                if 'timestamp' in message and message['timestamp'] < float(ts):
                     self._sdk.removeMessageFromStore(message)
     
 
