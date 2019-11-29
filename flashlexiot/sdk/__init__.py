@@ -42,7 +42,7 @@ class FlashlexSDK(object):
             self._config["flashlex"]["app"]["db"]["dataPath"], 
             self._config["flashlex"]["app"]["db"]["subscriptionData"])
 
-        subscriptionDb = pickledb.load(subscriptionDataPath, False)
+        subscriptionDb = pickledb.load(subscriptionDataPath, False, sig=False)
         listKeys = subscriptionDb.getall()
         messages_all = []
         for key in listKeys:
