@@ -23,6 +23,14 @@ before_deploy:
       - zip -r ${REPO}-${TRAVIS_COMMIT}.zip ${REPO} -x *.git* -x *venv* -x *.pytest_cache* -x *test*
       - mkdir build
       - mv ${REPO}-${TRAVIS_COMMIT}.zip build/.
+
+jobs:
+  include:
+    - if: branch = dev
+      env: SERVERLESS_STAGE=dev
+    - if: branch = master
+      env: SERVERLESS_STAGE=prd
+
 deploy:
   provider: s3
   access_key_id: "AKIAIHGW4EU2NNPVI4VA"
@@ -31,7 +39,7 @@ deploy:
   bucket: "github.com.flashlex-iot-python"
   skip_cleanup: true
   file: ${REPO}-${TRAVIS_COMMIT}.zip
-  upload-dir: $TRAVIS_BRANCH
+  upload-dir: $SERVERLESS_STAGE
   local_dir: build
   on:
     all_branches: true
