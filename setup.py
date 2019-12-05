@@ -14,8 +14,8 @@ setuptools.setup(
     url="https://github.com/claytantor/flashlex-iot-python",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: Apache License",
-        "Operating System :: OS Independent",
+        'Programming Language :: Python :: 3',
+        'Operating System :: OS Independent',
     ],
+
 )
