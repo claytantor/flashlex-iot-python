@@ -25,7 +25,7 @@ class VerifyVersionCommand(install):
 
 setuptools.setup(
     name="flashlexiot",
-    version="0.9.4",
+    version="0.9.5",
     author="Clay Graham",
     author_email="claytantor@flashlex.com",
     description="Flashlex IOT for python makes it easy to make any python computer an IOT device.",
