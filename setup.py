@@ -3,6 +3,20 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+
+class VerifyVersionCommand(install):
+    """Custom command to verify that the git tag matches our version"""
+    description = 'verify that the git tag matches our version'
+
+    def run(self):
+        tag = os.getenv('CIRCLE_TAG')
+
+        if tag != VERSION:
+            info = "Git tag: {0} does not match the version of this app: {1}".format(
+                tag, VERSION
+            )
+            sys.exit(info)
+
 setuptools.setup(
     name="flashlexiot",
     version="0.9.4",
@@ -21,6 +35,13 @@ setuptools.setup(
     'Programming Language :: Python :: 3',      #Specify which pyhton versions that you want to support
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6'
-  ],
+    ],
+    install_requires=[
+        'requests',
+    ],
+    python_requires='>=3.4',
+    cmdclass={
+        'verify': VerifyVersionCommand,
+    }
 
 )
