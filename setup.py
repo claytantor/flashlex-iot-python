@@ -4,7 +4,7 @@ import setuptools
 
 from setuptools import setup
 from setuptools.command.install import install
-from circleci.version import VERSION
+# from circleci.version import VERSION
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -17,9 +17,9 @@ class VerifyVersionCommand(install):
     def run(self):
         tag = os.getenv('CIRCLE_TAG')
 
-        if tag != VERSION:
+        if tag != '0.9.5':
             info = "Git tag: {0} does not match the version of this app: {1}".format(
-                tag, VERSION
+                tag, '0.9.5'
             )
             sys.exit(info)
 
