@@ -1,8 +1,9 @@
 pylint
-doc8
-coverage
-codecov
-twine
-sphinx
-sphinx-autobuild
-sphinx_rtd_theme
+pytest
+# doc8
+# coverage
+# codecov
+# twine
+# sphinx
+# sphinx-autobuild
+# sphinx_rtd_theme
