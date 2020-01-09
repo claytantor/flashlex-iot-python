@@ -3,7 +3,7 @@ pytest
 # doc8
 # coverage
 # codecov
-# twine
+twine
 # sphinx
 # sphinx-autobuild
 # sphinx_rtd_theme
