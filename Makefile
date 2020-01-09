@@ -24,6 +24,4 @@ package:
 test:
 	pip install -r requirements.txt
 	pip install -r dev-requirements.txt
-	# coverage run -m unittest discover
-	# coverage html
 	pytest
