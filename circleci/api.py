@@ -4,9 +4,6 @@ circleci.api
 ~~~~~~~~~~~~
 
     This module provides a class which abstracts the CircleCI REST API.
-
-    .. versionchanged:: 2.0.0
-       Removed legacy 1.0 endpoints. See CHANGELOG for more details.
 """
 import os
 
