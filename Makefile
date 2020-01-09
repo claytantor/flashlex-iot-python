@@ -22,5 +22,6 @@ package:
 	python setup.py bdist_wheel
 
 test:
+	pip install -r requirements.txt
 	coverage run -m unittest discover
 	coverage html
