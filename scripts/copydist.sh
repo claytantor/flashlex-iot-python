@@ -16,8 +16,9 @@ then
 fi
 
 bucket_path="s3://github.com.flashlex-iot-python/$DIST_STAGE/"
-file="${REPO}-${CIRCLE_SHA1}.zip"
+file="flashlex-iot-python-${CIRCLE_SHA1}.zip"
 
 aws iam get-user
-wget -O "${REPO}-${CIRCLE_SHA1}.zip" "https://github.com/claytantor/flashlex-iot-python/zipball/${zipball}/"
-aws s3 cp $file $bucket_path 
+wget -O "flashlex-iot-python-${CIRCLE_SHA1}.zip" "https://github.com/claytantor/flashlex-iot-python/zipball/${zipball}/"
+echo "aws s3 cp ${file} ${bucket_path}"
+aws s3 cp ${file} ${bucket_path} 
