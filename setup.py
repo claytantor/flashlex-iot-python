@@ -17,15 +17,15 @@ class VerifyVersionCommand(install):
     def run(self):
         tag = os.getenv('CIRCLE_TAG')
 
-        if tag != '0.9.10':
+        if tag != '0.9.11':
             info = "Git tag: {0} does not match the version of this app: {1}".format(
-                tag, '0.9.10'
+                tag, '0.9.11'
             )
             sys.exit(info)
 
 setuptools.setup(
     name="flashlexiot",
-    version="0.9.10",
+    version="0.9.11",
     author="Clay Graham",
     author_email="claytantor@flashlex.com",
     description="Flashlex IOT for python makes it easy to make any python computer an IOT device.",
