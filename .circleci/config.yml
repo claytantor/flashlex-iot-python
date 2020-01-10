@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@0.1.18
 workflows:
   build_and_deploy:
     jobs:
@@ -121,3 +123,8 @@ jobs:
           command: |
             . venv/bin/activate
             twine upload dist/*
+      - aws-cli/install
+      - run: aws --version
+      - run:
+          name: Deploy To S3
+          command: bash scripts/copydist.sh
