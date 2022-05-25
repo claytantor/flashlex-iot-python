@@ -1,6 +1,6 @@
 AWSIoTPythonSDK==1.4.4
 PyYAML>=5.1
-PyJWT==1.7.1
+PyJWT==2.4.0
 requests>=2.20.0
 cryptography==2.6.1
 pystache==0.5.4
